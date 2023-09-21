@@ -56,6 +56,22 @@ pub struct ThreadPool {
 }
 
 impl ThreadPool {
+    /// Create a thread pool
+    ///
+    /// # Example
+    /// ```
+    /// use http_server::ThreadPool;
+    ///
+    /// let pool = ThreadPool::build(4)?;
+    ///
+    /// for stream in listener.incoming() {
+    ///     let stream = stream.unwrap();
+    ///
+    ///     pool.execute(|| {
+    ///         // do something
+    ///     });
+    /// }
+    /// ```
     pub fn build(size: usize) -> Result<ThreadPool, ThreadPoolCreationError> {
         if size == 0 {
             return Err(ThreadPoolCreationError);
@@ -75,6 +91,22 @@ impl ThreadPool {
         })
     }
 
+    /// Pass a closure to be handled by the pool
+    ///
+    /// # Example
+    /// ```
+    /// use http_server::ThreadPool;
+    ///
+    /// let pool = ThreadPool::build(4)?;
+    ///
+    /// for stream in listener.incoming() {
+    ///     let stream = stream.unwrap();
+    ///
+    ///     pool.execute(|| {
+    ///         // do something
+    ///     });
+    /// }
+    /// ```
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
